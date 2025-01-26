@@ -3,6 +3,28 @@ import { useNavigate } from 'react-router-dom'
 
 function SignUp() {
     
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const email = data.get('email');
+    const password = data.get('password');
+    const username = data.get('username');
+
+    const response = await fetch('http://localhost:8081/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password}),
+    });
+
+    if (response.ok) {
+        navigate('/sign-in');
+      } else {
+        console.error('Sign-up failed');
+      }
+  }
+   
     const navigate = useNavigate();
 
     return (
@@ -20,19 +42,19 @@ function SignUp() {
           </div>
   
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form action="#" method="POST" className="space-y-4">
+            <form action="signup" method="POST" className="space-y-4" onSubmit={handleSubmit}>
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                    Email
+                  <label htmlFor="username" className="block text-sm/6 font-medium text-gray-900">
+                    username
                   </label>
                 </div>
                 <div className="mt-2">
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
+                    id="username"
+                    name="username"
+                    type="username"
                     required
                     autoComplete="email"
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -58,7 +80,7 @@ function SignUp() {
                 </div>
               </div>
   
-              <div>
+              {/* <div>
                 <div className="flex items-center justify-between">
                   <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
                     Confirm Password
@@ -74,7 +96,7 @@ function SignUp() {
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
-              </div>
+              </div> */}
   
               <div>
                 <button
