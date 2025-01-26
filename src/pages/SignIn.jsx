@@ -4,6 +4,24 @@ import { useNavigate } from 'react-router-dom'
 function SignIn() {
 
     const navigate = useNavigate();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        const username = data.get('username');
+        const password = data.get('password');
+        const headers = new Headers();
+        headers.append('Authorization', 'Basic ' + btoa(username + ':' + password));
+        headers.append('Content-Type', 'application/json');
+        const response = await fetch('http://localhost:8081/auth/login', {
+          method: 'GET',
+          headers: headers,
+        });
+        if (response.ok) {
+          navigate('/');
+        } else {
+          console.error('Sign-in failed');
+        }
+      };
 
     return (
       <>
@@ -20,21 +38,21 @@ function SignIn() {
           </div>
   
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form action="#" method="POST" className="space-y-4">
+            <form action="#" method="POST" className="space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                    Email
+                  <label htmlFor='username' className="block text-sm/6 font-medium text-gray-900">
+                    Username
                   </label>
                 </div>
                 <div className="mt-2">
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
+                    id="username"
+                    name="username"
+                    type="username"
                     required
-                    autoComplete="email"
+                    // autoComplete="email"
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
