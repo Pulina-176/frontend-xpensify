@@ -4,25 +4,30 @@ import { useNavigate } from 'react-router-dom'
 function SignIn() {
 
     const navigate = useNavigate();
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const data = new FormData(event.target);
-        const username = data.get('username');
-        const password = data.get('password');
-        const headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(username + ':' + password));
-        headers.append('Content-Type', 'application/json');
+  const handleSubmit = async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.target);
+      const username = data.get('username');
+      const password = data.get('password');
+      try{
         const response = await fetch('http://localhost:8081/auth/login', {
-          method: 'GET',
-          headers: headers,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
         });
-        if (response.ok) {
-          navigate('/');
+        const result = await response.text();
+        if (response.ok ) {
+          localStorage.setItem('token', result);
+          navigate('/home');
         } else {
           console.error('Sign-in failed');
         }
-      };
-
+      } catch (error) {
+        console.error('Sign-in failed', error);
+      }
+    };
     return (
       <>
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
