@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import Dashboard from './pages/Dashboard/Dashboard'
+import Tracker from './pages/FinanceCalculator/Tracker'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/home" element={<Dashboard />} />
+        <Route path="/tracker" element={<Tracker />} />
       </Routes>
     </div>
   );
