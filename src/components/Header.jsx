@@ -14,7 +14,7 @@ function classNames(...classes) {
 
 export default function Header() {
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-violet-700">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -28,11 +28,7 @@ export default function Header() {
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-              <img
-                alt="Your Company"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                className="h-8 w-auto"
-              />
+              <p className="text-2xl font-bold text-white">Xpensify</p>
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">

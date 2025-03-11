@@ -9,7 +9,7 @@ const Dashboard = () => {
   const var_balance = useSelector((state) => state.dashboard.balance);
 
   return (
-    <div className='h-screen flex flex-col'>
+    <div className='h-screen flex flex-col bg-gray-100'>
         <Header />
         <body className='grid grid-cols-1 md:grid-cols-3 px-12 py-12 md:px-48 place-items-center gap-y-12'>
           <div>

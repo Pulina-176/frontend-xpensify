@@ -1,53 +1,59 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function SignIn() {
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
-      event.preventDefault();
-      const data = new FormData(event.target);
-      const username = data.get('username');
-      const password = data.get('password');
-      try{
-        const response = await fetch('http://localhost:8081/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, password }),
-        });
-        const result = await response.text();
-        if (response.ok ) {
-          localStorage.setItem('token', result);
-          navigate('/home');
-        } else {
-          console.error('Sign-in failed');
-        }
-      } catch (error) {
-        console.error('Sign-in failed', error);
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const username = data.get("username");
+    const password = data.get("password");
+    try {
+      const response = await fetch("http://localhost:8082/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: "include",
+      });
+      const result = await response.text();
+      if (response.ok) {
+        localStorage.setItem("token", result);
+        navigate("/home");
+      } else {
+        console.error("Sign-in failed");
       }
-    };
-    return (
-      <>
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img
-              alt="Your Company"
-              src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-              className="mx-auto h-10 w-auto"
-            />
-            <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-              Sign In
-            </h2>
-          </div>
-  
-          <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form action="#" method="POST" className="space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
-
+    } catch (error) {
+      console.error("Sign-in failed", error);
+    }
+  };
+  return (
+    <>
+      <div class="h-screen bg-white flex flex-col justify-center">
+        <img
+          src="./src/assets/logo.png"
+          className="absolute top-0 left-0 ml-4 h-40 w-auto"
+        />
+        <div className=" mt-8 sm:mx-auto  sm:w-full  sm:max-w-sm">
+          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+            Sign In to your account
+          </h2>
+        </div>
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <form
+              action="#"
+              method="POST"
+              className="space-y-4 sm:space-y-5"
+              onSubmit={handleSubmit}
+            >
               <div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor='username' className="block text-sm/6 font-medium text-gray-900">
+                  <label
+                    htmlFor="username"
+                    className="block text-sm/6 font-medium text-gray-900"
+                  >
                     Username
                   </label>
                 </div>
@@ -65,7 +71,10 @@ function SignIn() {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm/6 font-medium text-gray-900"
+                  >
                     Password
                   </label>
                 </div>
@@ -80,7 +89,7 @@ function SignIn() {
                   />
                 </div>
               </div>
-  
+
               <div>
                 <button
                   type="submit"
@@ -92,17 +101,20 @@ function SignIn() {
             </form>
 
             <p className="mt-10 text-center text-sm/6 text-gray-500">
-                New here?{' '}
-                <a href="" className="font-semibold text-indigo-600 hover:text-indigo-500" onClick={()=>navigate('/sign-up')}>
+              New here?{" "}
+              <a
+                href=""
+                className="font-semibold text-indigo-600 hover:text-indigo-500"
+                onClick={() => navigate("/sign-up")}
+              >
                 Sign up today!
-                </a>
+              </a>
             </p>
-            
           </div>
         </div>
-      </>
-    )
-  }
-  
+      </div>
+    </>
+  );
+}
 
-export default SignIn
+export default SignIn;
