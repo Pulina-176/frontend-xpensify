@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
+      POSTGRES_USER: xpensify_txqh_user
+      POSTGRES_DB: xpensify_txqh
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-db-data:/var/lib/postgresql/data
+
+  xpensify-client:
+    image: chamudim/xpensify-client:latest
+    ports:
+      - "5173:5173"
+    depends_on:
+      - spring-boot-auth
+      - spring-boot-app
+    
+  spring-boot-auth:
+    image: chamudim/spring-boot-auth:latest
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres-db
+      - spring-boot-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-cupio8popnds739576rg-a.oregon-postgres.render.com:5432/xpensify_txqh?user=xpensify_txqh_user&password=pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
+      SPRING_DATASOURCE_USERNAME: xpensify_txqh_user
+      SPRING_DATASOURCE_PASSWORD: pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
+
+  spring-boot-app:
+    image: chamudim/spring-boot-app:latest
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-cupio8popnds739576rg-a.oregon-postgres.render.com:5432/xpensify_txqh?user=xpensify_txqh_user&password=pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
+      SPRING_DATASOURCE_USERNAME: xpensify_txqh_user
+      SPRING_DATASOURCE_PASSWORD: pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
+
+volumes:
+  postgres-db-data:
