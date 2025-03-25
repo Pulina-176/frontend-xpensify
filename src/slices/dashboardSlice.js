@@ -1,17 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    userId: "",
-    userName: "",
-    balance: 100.0
+    loading: false,
+    error: false,
+    balance: ""
 }
 
 const dashboardSlice = createSlice({
     name: 'dashboard',
     initialState,
-    reducers: {}
+    reducers: {
+        getBalanceStart: (state) => {
+            state.loading = true;
+            state.error = false;
+        },
+        getBalanceSuccess: (state, action) => {
+            state.balance = action.payload;
+            state.loading = false;
+            state.error = false;
+        },
+        getBalanceFailure: (state) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
+    }
 })
 
-export const {} = dashboardSlice.actions
+export const {getBalanceFailure, getBalanceStart, getBalanceSuccess} = dashboardSlice.actions
 
 export default dashboardSlice.reducer;

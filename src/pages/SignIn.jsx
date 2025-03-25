@@ -1,14 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { signInStart, signInSuccess, signInFailure } from "../slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function SignIn() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {loading, error} = useSelector((state) => state.user);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
     const username = data.get("username");
     const password = data.get("password");
     try {
+      dispatch(signInStart());
       const response = await fetch("http://localhost:8082/auth/login", {
         method: "POST",
         headers: {
@@ -17,11 +22,15 @@ function SignIn() {
         body: JSON.stringify({ username, password }),
         credentials: "include",
       });
-      const result = await response.text();
+      const result = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", result);
+        console.log(result.user);
+        console.log(result.token);
+        dispatch(signInSuccess(result.user));
+        localStorage.setItem("token", result.token);
         navigate("/home");
       } else {
+        dispatch(signInFailure(result.message));
         console.error("Sign-in failed");
       }
     } catch (error) {
@@ -30,7 +39,7 @@ function SignIn() {
   };
   return (
     <>
-      <div class="h-screen bg-white flex flex-col justify-center">
+      <div className="h-screen bg-white flex flex-col justify-center">
         <img
           src="./src/assets/logo.png"
           className="absolute top-0 left-0 ml-4 h-40 w-auto"
