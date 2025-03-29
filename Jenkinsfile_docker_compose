@@ -33,12 +33,7 @@ pipeline {
                 bat 'docker compose -f %COMPOSE_FILE% up --build -d'
             }
         }
-        
-        stage('Verify Running Containers') {
-            steps {
-                bat 'docker ps'
-            }
-        }
+ 
     }
 
     post {
