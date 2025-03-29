@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define environment variables here if needed
+        ImageRegistry = "chamudim"
+        COMPOSE_FILE = "docker-compose.yml"
+    }
+
+    stages {
+
+        stage('Login to Docker Hub') {
+            steps {
+                withCredentials([string(credentialsId: 'chamudi-dockerhub-pass', variable: 'chamudi-dockerhub-pass')]) {
+                    script {
+                        echo "Logging in to Docker Hub..."
+                        bat """
+                        docker login -u chamudim -p %chamudi-dockerhub-pass%
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Down existing Containers') {
+            steps {
+                sh 'docker compose -f $COMPOSE_FILE down'
+            }
+        }
+
+        stage('Build and Run Containers') {
+            steps {
+                sh 'docker compose -f $COMPOSE_FILE up --build -d'
+            }
+        }
+
+        stage('Verify Running Containers') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Cleaning up workspace..."
+            cleanWs()
+        }
+    }
+}
