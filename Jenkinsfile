@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define environment variables here if needed
+        ImageRegistry = "chamudim"
+        DockerComposeFile = "docker-compose.yml"
+    }
+
+    stages {
+
+        stage('Login to Docker Hub') {
+            steps {
+                withCredentials([string(credentialsId: 'chamudi-dockerhub-pass', variable: 'chamudi-dockerhub-pass')]) {
+                    script {
+                        echo "Logging in to Docker Hub..."
+                        bat """
+                        docker login -u adomicarts -p %dockerPassword%
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "Building Docker image..."
+                    bat """
+                    docker build -t %ImageRegistry%/devops_client:latest .
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                script {
+                    echo "Pushing Docker image to Docker Hub..."
+                    bat """
+                    docker push %ImageRegistry%/devops_client:latest
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Cleaning up workspace..."
+            cleanWs()
+        }
+}
+}
