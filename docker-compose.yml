@@ -13,7 +13,7 @@ services:
       - postgres-db-data:/var/lib/postgresql/data
 
   xpensify-client:
-    image: chamudim/xpensify-client:latest
+    image: chamudim/devops_client:latest
     ports:
       - "5173:5173"
     depends_on:
@@ -21,9 +21,9 @@ services:
       - spring-boot-app
     
   spring-boot-auth:
-    image: chamudim/spring-boot-auth:latest
+    image: chamudim/devops_auth:latest
     ports:
-      - "8081:8081"
+      - "8082:8082"
     depends_on:
       - postgres-db
       - spring-boot-app
@@ -33,9 +33,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
 
   spring-boot-app:
-    image: chamudim/spring-boot-app:latest
+    image: chamudim/devops_api:latest
     ports:
-      - "8082:8082"
+      - "8083:8083"
     depends_on:
       - postgres-db
     environment:
