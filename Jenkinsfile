@@ -15,7 +15,7 @@ pipeline {
                     script {
                         echo "Logging in to Docker Hub..."
                         bat """
-                        docker login -u adomicarts -p %dockerPassword%
+                        docker login -u chamudim -p %dockerPassword%
                         """
                     }
                 }
