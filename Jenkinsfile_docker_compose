@@ -24,19 +24,19 @@ pipeline {
 
         stage('Down existing Containers') {
             steps {
-                sh 'docker compose -f $COMPOSE_FILE down'
+                bat 'docker compose -f %COMPOSE_FILE% down'
             }
         }
 
         stage('Build and Run Containers') {
             steps {
-                sh 'docker compose -f $COMPOSE_FILE up --build -d'
+                bat 'docker compose -f %COMPOSE_FILE% up --build -d'
             }
         }
-
+        
         stage('Verify Running Containers') {
             steps {
-                sh 'docker ps'
+                bat 'docker ps'
             }
         }
     }
