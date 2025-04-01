@@ -4,9 +4,9 @@ services:
   postgres-db:
     image: postgres:latest
     environment:
-      POSTGRES_PASSWORD: pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
-      POSTGRES_USER: xpensify_txqh_user
-      POSTGRES_DB: xpensify_txqh
+      POSTGRES_PASSWORD: AVNS_Ny5uV7dBxlfqgmbRELX
+      POSTGRES_USER: avnadmin
+      POSTGRES_DB: defaultdb
     ports:
       - "5432:5432"
     volumes:
