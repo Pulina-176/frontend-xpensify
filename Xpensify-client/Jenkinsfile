@@ -27,6 +27,7 @@ pipeline {
                 script {
                     echo "Building Docker image..."
                     bat """
+                    cd Xpensify-client
                     docker build -t %ImageRegistry%/devops_client:latest .
                     """
                 }
