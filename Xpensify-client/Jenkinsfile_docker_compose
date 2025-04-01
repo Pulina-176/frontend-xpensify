@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Define environment variables here if needed
         ImageRegistry = "chamudim"
-        COMPOSE_FILE = "docker-compose.yml"
+        COMPOSE_FILE = "Xpensify-client/docker-compose.yml"
     }
 
     stages {
