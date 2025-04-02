@@ -22,7 +22,7 @@ pipeline {
                         echo "Connecting to EC2..."
                         
                         REM Copy the docker-compose file
-                        pscp -i %EC2_KEY% ${COMPOSE_FILE} %EC2_USER%@${EC2_IP}:/home/ubuntu
+                        pscp -batch -i %EC2_KEY% ${COMPOSE_FILE} %EC2_USER%@${EC2_IP}:/home/ubuntu
 
                         REM Login to DockerHub
                         plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
