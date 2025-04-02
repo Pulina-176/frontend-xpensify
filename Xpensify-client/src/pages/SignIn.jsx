@@ -15,7 +15,7 @@ function SignIn() {
     const data = new FormData(event.target);
     const username = data.get("username");
     const password = data.get("password");
-    console.log(AUTH_URL)
+    console.log("this is the new one")
     try {
       dispatch(signInStart());
       const response = await fetch(`http://54.167.74.23:8082/auth/login`, {
