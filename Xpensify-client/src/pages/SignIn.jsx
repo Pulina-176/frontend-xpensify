@@ -4,6 +4,9 @@ import { signInStart, signInSuccess, signInFailure } from "../slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function SignIn() {
+
+  const AUTH_URL = import.meta.env.VITE_AUTH_URL;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {loading, error} = useSelector((state) => state.user);
@@ -14,7 +17,7 @@ function SignIn() {
     const password = data.get("password");
     try {
       dispatch(signInStart());
-      const response = await fetch("http://localhost:8082/auth/login", {
+      const response = await fetch(`${AUTH_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,6 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function SignUp() {
+
+  const AUTH_URL = import.meta.env.VITE_AUTH_URL;
+
   async function handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
@@ -9,7 +12,7 @@ function SignUp() {
     const password = data.get("password");
     const username = data.get("username");
 
-    const response = await fetch("http://localhost:8082/auth/register", {
+    const response = await fetch(`${AUTH_URL}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

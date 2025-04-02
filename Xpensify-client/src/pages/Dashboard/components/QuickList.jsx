@@ -3,6 +3,9 @@ import { TrashIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from "react-router-dom";
 
 const QuickList = ({ value: transactions }) => {
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
   if (!transactions || !Array.isArray(transactions)) {
     return <p className="text-center text-gray-500">No transactions available.</p>;
@@ -13,7 +16,7 @@ const QuickList = ({ value: transactions }) => {
     if (confirmDelete) {
       (async () => {
         try {
-          const response = await fetch(`http://localhost:8083/api/transactions/${transactionId}`, {
+          const response = await fetch(`${API_URL}/api/transactions/${transactionId}`, {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",

@@ -6,13 +6,15 @@ import { useParams } from "react-router-dom";
 
 const EditTransactions = () => {
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { id } = useParams();
   console.log(id);
   
 
   useEffect(() => {
     const fetchTransaction = async () => {
-      const response = await fetch(`http://localhost:8083/api/transactions/transaction/${id}`);
+      const response = await fetch(`${API_URL}/api/transactions/transaction/${id}`);
       const result = await response.json();
       console.log(result);
       if (response.ok) {
@@ -28,7 +30,7 @@ const EditTransactions = () => {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const res = await fetch("http://localhost:8083/api/transactions", {
+    const res = await fetch(`${API_URL}/api/transactions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
