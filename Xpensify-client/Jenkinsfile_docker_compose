@@ -14,27 +14,27 @@ pipeline {
                 script {
                     echo "Deploying application on EC2..."
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-devops', 
-                                                    keyFileVariable: 'ec2-instance', 
-                                                    usernameVariable: 'ec2-instance'), 
+                                                    keyFileVariable: 'EC2_KEY', 
+                                                    usernameVariable: 'EC2_USER'), 
                                     string(credentialsId: 'chamudi-dockerhub-pass', 
                                         variable: 'DOCKER_HUB_PASS')]) {
                         bat """
                         echo "Connecting to EC2..."
                         
-                        REM Use pscp to copy the docker-compose file
-                        pscp -i %ec2-instance% ${COMPOSE_FILE} ubuntu@${EC2_IP}:/home/ubuntu
+                        REM Copy the docker-compose file
+                        pscp -i %EC2_KEY% ${COMPOSE_FILE} %EC2_USER%@${EC2_IP}:/home/ubuntu
 
                         REM Login to DockerHub
-                        plink -i %ec2-instance% ubuntu@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
+                        plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
 
                         REM Stop any running services
-                        plink -i %ec2-instance% ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
+                        plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
 
                         REM Pull the latest images
-                        plink -i %ec2-instance% ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
+                        plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
 
                         REM Start the containers
-                        plink -i %ec2-instance% ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
+                        plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
                         """
                     }
                 }
