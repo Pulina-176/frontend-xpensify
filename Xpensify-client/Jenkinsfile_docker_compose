@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying application on EC2..."
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu', 
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-devops', 
                                                     keyFileVariable: 'ec2-instance', 
                                                     usernameVariable: 'ec2-instance'), 
                                     string(credentialsId: 'chamudi-dockerhub-pass', 
