@@ -8,20 +8,34 @@ pipeline {
     }
 
     stages {
+
         stage("Deploy to AWS EC2") {
             steps {
                 script {
                     echo "Deploying application on EC2..."
-                    sshagent(['ec2-devops']) {
-                        withCredentials([string(credentialsId: 'chamudi-dockerhub-pass', variable: 'DOCKER_HUB_PASS')]) {
-                            bat """
-                            pscp ${COMPOSE_FILE} ubuntu@${EC2_IP}:/home/ubuntu
-                            plink ubuntu@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
-                            plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
-                            plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
-                            plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
-                            """
-                        }
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-devops', 
+                                                    keyFileVariable: 'ec2-instance', 
+                                                    usernameVariable: 'ec2-instance'), 
+                                    string(credentialsId: 'chamudi-dockerhub-pass', 
+                                        variable: 'DOCKER_HUB_PASS')]) {
+                        bat """
+                        echo "Connecting to EC2..."
+                        
+                        REM Use pscp to copy the docker-compose file
+                        pscp -i %ec2-instance% ${COMPOSE_FILE} ubuntu@${EC2_IP}:/home/ubuntu
+
+                        REM Login to DockerHub
+                        plink -i %ec2-instance% ubuntu@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
+
+                        REM Stop any running services
+                        plink -i %ec2-instance% ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
+
+                        REM Pull the latest images
+                        plink -i %ec2-instance% ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
+
+                        REM Start the containers
+                        plink -i %ec2-instance% ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
+                        """
                     }
                 }
             }
