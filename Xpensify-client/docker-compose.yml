@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: avnadmin
       POSTGRES_DB: defaultdb
     ports:
-      - "22851:5432"
+      - "22851:22851"
     volumes:
       - postgres-db-data:/var/lib/postgresql/data
 
@@ -28,9 +28,9 @@ services:
       - postgres-db
       - spring-boot-app
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-cupio8popnds739576rg-a.oregon-postgres.render.com:5432/xpensify_txqh?user=xpensify_txqh_user&password=pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
-      SPRING_DATASOURCE_USERNAME: xpensify_txqh_user
-      SPRING_DATASOURCE_PASSWORD: pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-devops-devops-project.c.aivencloud.com:22851/defaultdb?ssl=require&user=avnadmin&password=AVNS_Ny5uV7dBxlfqgmbRELX
+      SPRING_DATASOURCE_USERNAME: avnadmin
+      SPRING_DATASOURCE_PASSWORD: AVNS_Ny5uV7dBxlfqgmbRELX
 
   spring-boot-app:
     image: chamudim/devops_api:latest
@@ -39,9 +39,9 @@ services:
     depends_on:
       - postgres-db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-cupio8popnds739576rg-a.oregon-postgres.render.com:5432/xpensify_txqh?user=xpensify_txqh_user&password=pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
-      SPRING_DATASOURCE_USERNAME: xpensify_txqh_user
-      SPRING_DATASOURCE_PASSWORD: pkEuGaYhlXxodw3e34cgE5ebkK0vzCgm
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-devops-devops-project.c.aivencloud.com:22851/defaultdb?ssl=require&user=avnadmin&password=AVNS_Ny5uV7dBxlfqgmbRELX
+      SPRING_DATASOURCE_USERNAME: avnadmin
+      SPRING_DATASOURCE_PASSWORD: AVNS_Ny5uV7dBxlfqgmbRELX
 
 volumes:
   postgres-db-data:
