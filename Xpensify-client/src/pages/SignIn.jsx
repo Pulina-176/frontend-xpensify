@@ -18,7 +18,7 @@ function SignIn() {
     console.log(AUTH_URL)
     try {
       dispatch(signInStart());
-      const response = await fetch(`${AUTH_URL}/auth/login`, {
+      const response = await fetch(`http://54.167.74.23:8082/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
