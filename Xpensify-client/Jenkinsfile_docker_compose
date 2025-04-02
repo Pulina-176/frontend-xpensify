@@ -8,19 +8,20 @@ pipeline {
     }
 
     stages {
-        
         stage("Deploy to AWS EC2") {
             steps {
                 script {
                     echo "Deploying application on EC2..."
                     sshagent(['ec2-devops']) {
-                        bat """
-                        pscp ${COMPOSE_FILE} ubuntu@${EC2_IP}:/home/ubuntu
-                        plink ubuntu@${EC2_IP} "docker login -u chamudim -p %chamudi-dockerhub-pass%"
-                        plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
-                        plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
-                        plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
-                        """
+                        withCredentials([string(credentialsId: 'chamudi-dockerhub-pass', variable: 'DOCKER_HUB_PASS')]) {
+                            bat """
+                            pscp ${COMPOSE_FILE} ubuntu@${EC2_IP}:/home/ubuntu
+                            plink ubuntu@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
+                            plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
+                            plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
+                            plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
+                            """
+                        }
                     }
                 }
             }
