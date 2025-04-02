@@ -15,6 +15,7 @@ function SignIn() {
     const data = new FormData(event.target);
     const username = data.get("username");
     const password = data.get("password");
+    console.log(AUTH_URL)
     try {
       dispatch(signInStart());
       const response = await fetch(`${AUTH_URL}/auth/login`, {
