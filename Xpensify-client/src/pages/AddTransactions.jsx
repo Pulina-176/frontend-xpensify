@@ -4,10 +4,12 @@ import Header from '../components/Header'
 import {useSelector} from 'react-redux'
 
 const AddTransaction = () => {
+
+  const API_URL = import.meta.env.VITE_API_URL;
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const res = await fetch("http://localhost:8083/api/transactions", {
+    const res = await fetch(`${API_URL}/api/transactions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -12,6 +12,8 @@ import { fetchTransactionStart, fetchTransactionSuccess, fetchTransactionFailure
 
 const Dashboard = () => {
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const currentUser = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ const Dashboard = () => {
   const fetchBalance = async () => {
     try {
       dispatch(getBalanceStart());
-      const response = await fetch(`http://localhost:8083/api/dashboard/balance/${currentUser.id}`, {
+      const response = await fetch(`${API_URL}/api/dashboard/balance/${currentUser.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +58,7 @@ const Dashboard = () => {
   const fetchTransactions = async () => {
     try {
       dispatch(fetchTransactionStart());
-      const response = await fetch(`http://localhost:8083/api/transactions/${currentUser.id}`, {
+      const response = await fetch(`${API_URL}/api/transactions/${currentUser.id}`, {
         method: "GET",        
         headers: {
           "Content-Type": "application/json",
