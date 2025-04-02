@@ -2,38 +2,29 @@ pipeline {
     agent any
 
     environment {
-        // Define environment variables here if needed
         ImageRegistry = "chamudim"
         COMPOSE_FILE = "Xpensify-client/docker-compose.yml"
+        EC2_IP = "54.83.85.71"  // Replace with your EC2 IP
     }
 
     stages {
-
-        stage('Login to Docker Hub') {
+        
+        stage("Deploy to AWS EC2") {
             steps {
-                withCredentials([string(credentialsId: 'chamudi-dockerhub-pass', variable: 'chamudi-dockerhub-pass')]) {
-                    script {
-                        echo "Logging in to Docker Hub..."
+                script {
+                    echo "Deploying application on EC2..."
+                    sshagent(['ec2-devops']) {
                         bat """
-                        docker login -u chamudim -p %chamudi-dockerhub-pass%
+                        pscp ${COMPOSE_FILE} ubuntu@${EC2_IP}:/home/ubuntu
+                        plink ubuntu@${EC2_IP} "docker login -u chamudim -p %chamudi-dockerhub-pass%"
+                        plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
+                        plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
+                        plink ubuntu@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
                         """
                     }
                 }
             }
         }
-
-        stage('Down existing Containers') {
-            steps {
-                bat 'docker compose -f %COMPOSE_FILE% down'
-            }
-        }
-
-        stage('Build and Run Containers') {
-            steps {
-                bat 'docker compose -f %COMPOSE_FILE% up --build -d'
-            }
-        }
- 
     }
 
     post {
