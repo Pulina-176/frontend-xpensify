@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: AVNS_Ny5uV7dBxlfqgmbRELX
+      POSTGRES_USER: avnadmin
+      POSTGRES_DB: defaultdb
+    ports:
+      - "22851:22851"
+    volumes:
+      - postgres-db-data:/var/lib/postgresql/data
+
+  xpensify-client:
+    image: chamudim/devops_client:latest
+    ports:
+      - "5173:5173"
+    depends_on:
+      - spring-boot-auth
+      - spring-boot-app
+    
+  spring-boot-auth:
+    image: chamudim/devops_auth:latest
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres-db
+      - spring-boot-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-devops-devops-project.c.aivencloud.com:22851/defaultdb?ssl=require&user=avnadmin&password=AVNS_Ny5uV7dBxlfqgmbRELX
+      SPRING_DATASOURCE_USERNAME: avnadmin
+      SPRING_DATASOURCE_PASSWORD: AVNS_Ny5uV7dBxlfqgmbRELX
+
+  spring-boot-app:
+    image: chamudim/devops_api:latest
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-devops-devops-project.c.aivencloud.com:22851/defaultdb?ssl=require&user=avnadmin&password=AVNS_Ny5uV7dBxlfqgmbRELX
+      SPRING_DATASOURCE_USERNAME: avnadmin
+      SPRING_DATASOURCE_PASSWORD: AVNS_Ny5uV7dBxlfqgmbRELX
+
+volumes:
+  postgres-db-data:
