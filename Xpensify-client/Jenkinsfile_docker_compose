@@ -8,16 +8,6 @@ pipeline {
 
     stages {
 
-        // stage('Verify Ansible') {
-        //     steps {
-        //         script{
-        //             dir('ansible') {
-        //                 bat 'wsl -d Ubuntu /usr/bin/ansible -i inventory.ini all -m ping'
-        //             }
-        //         }
-        //     }
-        // }
-
         stage('Terraform Setup') {
             steps {
                 script {
@@ -39,6 +29,16 @@ pipeline {
                             bat 'terraform init'
                             bat 'terraform apply -auto-approve'
                         }
+                    }
+                }
+            }
+        }
+
+        stage('Verify Ansible') {
+            steps {
+                script{
+                    dir('ansible') {
+                        bat 'wsl -d Ubuntu /usr/bin/ansible -i inventory.ini all -m ping'
                     }
                 }
             }
