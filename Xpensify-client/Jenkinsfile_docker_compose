@@ -8,15 +8,15 @@ pipeline {
 
     stages {
 
-        stage('Verify Ansible') {
-            steps {
-                script{
-                    dir('ansible') {
-                        bat 'wsl -d Ubuntu /usr/bin/ansible -i inventory.ini all -m ping'
-                    }
-                }
-            }
-        }
+        // stage('Verify Ansible') {
+        //     steps {
+        //         script{
+        //             dir('ansible') {
+        //                 bat 'wsl -d Ubuntu /usr/bin/ansible -i inventory.ini all -m ping'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Terraform Setup') {
             steps {
