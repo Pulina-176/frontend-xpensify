@@ -24,11 +24,11 @@ pipeline {
                     dir('terraform') {
                         // Robust AWS instance check
                         def instanceId = bat(
-                            script: 'aws ec2 describe-instances --filters "Name=tag:Name,Values=DevOpsEC2" "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].[InstanceId]" --output text || echo "NULL"',
+                            script: 'aws ec2 describe-instances --filters "Name=tag:Name,Values=DevOpsEC2" "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].[InstanceId]" --output text',
                             returnStdout: true
                         ).trim()
 
-                        if (instanceId && instanceId != "NULL") {
+                        if (instanceId != "") {
                             echo "Active 'DevOpsEC2' instance found (ID: ${instanceId}) - skipping Terraform"
                         } else {
                             echo "No running instance detected - provisioning infrastructure"
