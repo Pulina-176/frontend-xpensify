@@ -1,0 +1,51 @@
+---
+- name: Clean Docker Environment and Run New Containers
+  hosts: all
+  become: yes
+  tasks:
+    # Task 1: Navigate to app dir and run compose down
+    - name: Stop and remove containers with volumes
+      ansible.builtin.command: docker compose down -v
+      args:
+        chdir: /opt/myapp
+      register: compose_down
+      changed_when: 
+        - "'Stopping' in compose_down.stdout"
+        - "'Removing' in compose_down.stdout"
+      ignore_errors: yes  # In case no containers exist
+
+    # Task 2: Clean up unused images
+    - name: Prune all unused images
+      ansible.builtin.command: docker image prune -a -f
+      register: image_prune
+      changed_when: "'Total reclaimed space' in image_prune.stdout"
+
+    # Task 3: Ensure deployment directory exists
+    - name: Maintain deployment directory
+      ansible.builtin.file:
+        path: /opt/myapp
+        state: directory
+        mode: '0755'
+
+    # Task 4: Deploy compose file
+    - name: Update Docker Compose file
+      ansible.builtin.copy:
+        src: ./docker-compose.yml
+        dest: /opt/myapp/docker-compose.yml
+        mode: '0644'
+        owner: root
+        group: root
+
+    # Task 5: Start containers with rebuild
+    - name: Launch containers
+      ansible.builtin.command: docker compose up --build -d
+      args:
+        chdir: /opt/myapp
+      register: compose_up
+      changed_when: 
+        - "'Creating' in compose_up.stdout" 
+        - "'Recreating' in compose_up.stdout"
+        - "'Building' in compose_up.stdout"
+      failed_when: 
+        - compose_up.rc != 0
+        - "'error' in compose_up.stderr|lower"
