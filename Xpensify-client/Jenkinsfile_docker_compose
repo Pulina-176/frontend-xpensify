@@ -27,7 +27,6 @@ pipeline {
                         }
                     }
                 }
-            }
         }
 
         stage('Deploy docker containers with Ansible') {
