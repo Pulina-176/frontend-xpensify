@@ -9,7 +9,7 @@ const AddTransaction = () => {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const res = await fetch(`${API_URL}/api/transactions`, {
+    const res = await fetch(`http://3.94.125.173/api/transactions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
