@@ -11,7 +11,7 @@ pipeline {
 
         stage('Verify Ansible') {
             steps {
-                bat 'wsl -d Ubuntu /usr/bin/ansible --version'
+                bat 'wsl -d Ubuntu /usr/bin/ansible -i inventory.ini all -m ping'
             }
         }
 
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script{
                     dir('ansible') {
-                        bat 'wsl -d Ubuntu /usr/bin/ansible-playbook -i inventory.ini docker-deploy.yml'
+                        bat 'wsl -d Ubuntu /usr/bin/ansible-playbook -i inventory.ini docker-deploy.yml -vvv'
                     }
                 }
             }
