@@ -15,19 +15,19 @@ pipeline {
             }
         }
 
-        stage('Terraform Setup') {
-            steps {
-                script {
-                    def instanceExists = false
+        // stage('Terraform Setup') {
+        //     steps {
+        //         script {
+        //             def instanceExists = false
                     
-                    // Change directory to where Terraform files are located
-                    dir('terraform') {
-                        bat 'terraform init'
-                        bat 'terraform apply -auto-approve'
-                        }
-                    }
-                }
-        }
+        //             // Change directory to where Terraform files are located
+        //             dir('terraform') {
+        //                 bat 'terraform init'
+        //                 bat 'terraform apply -auto-approve'
+        //                 }
+        //             }
+        //         }
+        // }
 
         stage('Deploy docker containers with Ansible') {
             steps {
