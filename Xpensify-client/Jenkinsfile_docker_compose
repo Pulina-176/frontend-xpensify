@@ -43,37 +43,16 @@ pipeline {
             }
         }
 
-        // stage("Deploy to AWS EC2") {
-        //     steps {
-        //         script {
-        //             echo "Deploying application on EC2..."
-        //             withCredentials([sshUserPrivateKey(credentialsId: 'ec2-devops', 
-        //                                             keyFileVariable: 'EC2_KEY', 
-        //                                             usernameVariable: 'EC2_USER'), 
-        //                             string(credentialsId: 'chamudi-dockerhub-pass', 
-        //                                 variable: 'DOCKER_HUB_PASS')]) {
-        //                 bat """
-        //                 echo "Connecting to EC2..."
-                        
-        //                 REM Copy the docker-compose file
-        //                 pscp -batch -hostkey "ssh-ed25519 255 SHA256:Wn8BHMIdgC5wW6s0y7ZyTlPPw4MELMcU90QXkU+QNLE" -i %EC2_KEY% ${COMPOSE_FILE} %EC2_USER%@${EC2_IP}:/home/ubuntu
+        stage('Deploy docker containers with Ansible') {
+            steps {
+                script{
+                    dir('ansible') {
+                        bat 'wsl -d Ubuntu /usr/bin/ansible-playbook -i inventory.ini docker-deploy.yml'
+                    }
+                }
+            }
+        }
 
-        //                 REM Login to DockerHub
-        //                 plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
-
-        //                 REM Stop any running services
-        //                 plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
-
-        //                 REM Pull the latest images
-        //                 plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
-
-        //                 REM Start the containers
-        //                 plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
-        //                 """
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     post {
