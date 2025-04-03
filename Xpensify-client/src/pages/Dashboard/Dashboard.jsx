@@ -32,7 +32,7 @@ const Dashboard = () => {
   const fetchBalance = async () => {
     try {
       dispatch(getBalanceStart());
-      const response = await fetch(`http://3.94.125.173/api/dashboard/balance/${currentUser.id}`, {
+      const response = await fetch(`http://3.94.125.173:8083/api/dashboard/balance/${currentUser.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +58,7 @@ const Dashboard = () => {
   const fetchTransactions = async () => {
     try {
       dispatch(fetchTransactionStart());
-      const response = await fetch(`${API_URL}/api/transactions/${currentUser.id}`, {
+      const response = await fetch(`http://3.94.125.173:8083/api/transactions/${currentUser.id}`, {
         method: "GET",        
         headers: {
           "Content-Type": "application/json",

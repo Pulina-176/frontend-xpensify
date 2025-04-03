@@ -14,7 +14,7 @@ const EditTransactions = () => {
 
   useEffect(() => {
     const fetchTransaction = async () => {
-      const response = await fetch(`http://3.94.125.173/api/transactions/transaction/${id}`);
+      const response = await fetch(`http://3.94.125.173:8083/api/transactions/transaction/${id}`);
       const result = await response.json();
       console.log(result);
       if (response.ok) {
