@@ -9,6 +9,12 @@ pipeline {
 
     stages {
 
+        stage('Verify Ansible') {
+            steps {
+                sh 'wsl -d Ubuntu /usr/bin/ansible --version'
+            }
+        }
+
         stage('Terraform Setup') {
             steps {
                 script {
@@ -19,7 +25,7 @@ pipeline {
                         bat 'terraform init'
 
                         // Check if an instance is already created
-                        def checkInstance = bat(script: 'terraform state list aws_instance.my_instance', returnStatus: true)
+                        def checkInstance = bat(script: 'terraform state list aws_instance.devops_EC2', returnStatus: true)
 
                         if (checkInstance == 0) {
                             echo "Instance already exists. Skipping Terraform apply."
@@ -37,37 +43,37 @@ pipeline {
             }
         }
 
-        stage("Deploy to AWS EC2") {
-            steps {
-                script {
-                    echo "Deploying application on EC2..."
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-devops', 
-                                                    keyFileVariable: 'EC2_KEY', 
-                                                    usernameVariable: 'EC2_USER'), 
-                                    string(credentialsId: 'chamudi-dockerhub-pass', 
-                                        variable: 'DOCKER_HUB_PASS')]) {
-                        bat """
-                        echo "Connecting to EC2..."
+        // stage("Deploy to AWS EC2") {
+        //     steps {
+        //         script {
+        //             echo "Deploying application on EC2..."
+        //             withCredentials([sshUserPrivateKey(credentialsId: 'ec2-devops', 
+        //                                             keyFileVariable: 'EC2_KEY', 
+        //                                             usernameVariable: 'EC2_USER'), 
+        //                             string(credentialsId: 'chamudi-dockerhub-pass', 
+        //                                 variable: 'DOCKER_HUB_PASS')]) {
+        //                 bat """
+        //                 echo "Connecting to EC2..."
                         
-                        REM Copy the docker-compose file
-                        pscp -batch -hostkey "ssh-ed25519 255 SHA256:Wn8BHMIdgC5wW6s0y7ZyTlPPw4MELMcU90QXkU+QNLE" -i %EC2_KEY% ${COMPOSE_FILE} %EC2_USER%@${EC2_IP}:/home/ubuntu
+        //                 REM Copy the docker-compose file
+        //                 pscp -batch -hostkey "ssh-ed25519 255 SHA256:Wn8BHMIdgC5wW6s0y7ZyTlPPw4MELMcU90QXkU+QNLE" -i %EC2_KEY% ${COMPOSE_FILE} %EC2_USER%@${EC2_IP}:/home/ubuntu
 
-                        REM Login to DockerHub
-                        plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
+        //                 REM Login to DockerHub
+        //                 plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "echo ${DOCKER_HUB_PASS} | docker login -u chamudim --password-stdin"
 
-                        REM Stop any running services
-                        plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
+        //                 REM Stop any running services
+        //                 plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} down || true"
 
-                        REM Pull the latest images
-                        plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
+        //                 REM Pull the latest images
+        //                 plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} pull"
 
-                        REM Start the containers
-                        plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
-                        """
-                    }
-                }
-            }
-        }
+        //                 REM Start the containers
+        //                 plink -i %EC2_KEY% %EC2_USER%@${EC2_IP} "docker compose -f /home/ubuntu/${COMPOSE_FILE} up --build -d"
+        //                 """
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     post {
