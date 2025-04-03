@@ -18,14 +18,14 @@ export default function Home() {
           {/* Small Tagline */}
           <div className="mb-6 sm:mb-8 flex justify-center">
             <div className="relative rounded-full px-3 py-1 text-sm text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-              Track, Plan, and Save Smarter and les fking goooooo!
+              Track, Plan, and Save Smarter
             </div>
           </div>
 
           {/* Typewriter Effect on H1 */}
           <h1 className="text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
             <Typewriter
-              words={['Take Control of Your Finances with Ease', 'Manage Your Budget Smarter', 'Achieve Your Savings Goals!']}
+              words={['Take Control of Your Finances with Ease', 'Manage Your Budget Smarter', 'Achieve Your Savings Goals!', 'Pipeline Success']}
               loop={Infinity}
               cursor
               cursorStyle="|"
