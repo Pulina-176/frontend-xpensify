@@ -21,7 +21,7 @@ pipeline {
                     def instanceExists = false
                     
                     // Change directory to where Terraform files are located
-                    dir('Xpensify-client/terraform') {
+                    dir('terraform') {
                         bat 'terraform init'
 
                         // Check if an instance is already created
