@@ -11,7 +11,7 @@ pipeline {
 
         stage('Verify Ansible') {
             steps {
-                sh 'wsl -d Ubuntu /usr/bin/ansible --version'
+                bat 'wsl -d Ubuntu /usr/bin/ansible --version'
             }
         }
 
