@@ -22,13 +22,17 @@ pipeline {
             steps {
                 script {
                     dir('terraform') {
-                        // Robust AWS instance check
+                        // Properly formatted AWS CLI command
                         def instanceId = bat(
-                            script: 'aws ec2 describe-instances --filters "Name=tag:Name,Values=DevOpsEC2" "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].[InstanceId]" --output text',
+                            script: '@aws ec2 describe-instances --filters Name=tag:Name,Values=DevOpsEC2 Name=instance-state-name,Values=running --query "Reservations[].Instances[].[InstanceId]" --output text',
                             returnStdout: true
                         ).trim()
 
-                        if (instanceId != "") {
+                        // Debug output
+                        echo "AWS CLI returned: '${instanceId}'"
+
+                        // Robust check
+                        if (instanceId && instanceId =~ /^i-[0-9a-f]{17}$/) {
                             echo "Active 'DevOpsEC2' instance found (ID: ${instanceId}) - skipping Terraform"
                         } else {
                             echo "No running instance detected - provisioning infrastructure"
