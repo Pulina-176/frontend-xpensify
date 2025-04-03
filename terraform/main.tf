@@ -63,6 +63,12 @@ resource "aws_instance" "devops_EC2" {
   key_name               = "devops-project"
   security_groups        = [aws_security_group.devops_sg.name]
 
+  # Setup for 24GB root volume
+  root_block_device {
+    volume_size = 24  # GB
+    volume_type = "gp3"  # Or "gp3" for better performance
+  }
+
   lifecycle {
     ignore_changes = [ami]  # Prevents instance from recreating due to AMI changes
   }
