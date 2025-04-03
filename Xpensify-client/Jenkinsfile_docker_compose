@@ -4,7 +4,6 @@ pipeline {
     environment {
         ImageRegistry = "chamudim"
         COMPOSE_FILE = "Xpensify-client/docker-compose.yml"
-        EC2_IP = "54.83.85.71"  // Replace with your EC2 IP
     }
 
     stages {
@@ -19,19 +18,28 @@ pipeline {
             }
         }
 
-        // stage('Terraform Setup') {
-        //     steps {
-        //         script {
-        //             def instanceExists = false
-                    
-        //             // Change directory to where Terraform files are located
-        //             dir('terraform') {
-        //                 bat 'terraform init'
-        //                 bat 'terraform apply -auto-approve'
-        //                 }
-        //             }
-        //         }
-        // }
+        stage('Terraform Setup') {
+            steps {
+                script {
+                    dir('terraform') {
+                        // First check AWS for existing running instances
+                        def awsCheck = bat(
+                            script: 'aws ec2 describe-instances --filters "Name=tag:Name,Values=DevOpsEC2" "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].[InstanceId]" --output text',
+                            returnStdout: true
+                        ).trim()
+
+                        if (awsCheck) {
+                            echo "Found existing RUNNING instance with name 'DevOpsEC2' (ID: ${awsCheck})"
+                            echo "Skipping Terraform operations"
+                        } else {
+                            echo "No running 'DevOpsEC2' instance found - initializing Terraform"
+                            bat 'terraform init'
+                            bat 'terraform apply -auto-approve'
+                        }
+                    }
+                }
+            }
+        }
 
         stage('Deploy docker containers with Ansible') {
             steps {
