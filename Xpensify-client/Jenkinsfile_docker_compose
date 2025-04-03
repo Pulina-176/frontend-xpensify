@@ -23,20 +23,7 @@ pipeline {
                     // Change directory to where Terraform files are located
                     dir('terraform') {
                         bat 'terraform init'
-
-                        // Check if an instance is already created
-                        def checkInstance = bat(script: 'terraform state list aws_instance.devops_EC2', returnStatus: true)
-
-                        if (checkInstance == 0) {
-                            echo "Instance already exists. Skipping Terraform apply."
-                            instanceExists = true
-                        } else {
-                            echo "No existing instance found. Proceeding with Terraform apply."
-                        }
-
-                        // Apply Terraform only if instance does not exist
-                        if (!instanceExists) {
-                            bat 'terraform apply -auto-approve'
+                        bat 'terraform apply -auto-approve'
                         }
                     }
                 }
