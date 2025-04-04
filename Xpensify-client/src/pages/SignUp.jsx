@@ -12,7 +12,7 @@ function SignUp() {
     const password = data.get("password");
     const username = data.get("username");
 
-    const response = await fetch(`http://44.201.144.42:8082/auth/register`, {
+    const response = await fetch(`http://54.86.117.121:8082/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
