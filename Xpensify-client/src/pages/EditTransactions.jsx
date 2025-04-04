@@ -14,7 +14,7 @@ const EditTransactions = () => {
 
   useEffect(() => {
     const fetchTransaction = async () => {
-      const response = await fetch(`http://44.201.144.42:8083/api/transactions/transaction/${id}`);
+      const response = await fetch(`http://54.86.117.121:8083/api/transactions/transaction/${id}`);
       const result = await response.json();
       console.log(result);
       if (response.ok) {
@@ -30,7 +30,7 @@ const EditTransactions = () => {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const res = await fetch(`http://44.201.144.42:8083/api/transactions`, {
+    const res = await fetch(`http://54.86.117.121:8083/api/transactions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
