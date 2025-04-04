@@ -18,7 +18,7 @@ function SignIn() {
     console.log("this is the new one")
     try {
       dispatch(signInStart());
-      const response = await fetch(`http://3.94.125.173:8082/auth/login`, {
+      const response = await fetch(`http://44.201.144.42:8082/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
