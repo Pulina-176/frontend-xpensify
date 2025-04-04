@@ -16,7 +16,7 @@ const QuickList = ({ value: transactions }) => {
     if (confirmDelete) {
       (async () => {
         try {
-          const response = await fetch(`http://3.94.125.173:8083/api/transactions/${transactionId}`, {
+          const response = await fetch(`http://44.201.144.42:8083/api/transactions/${transactionId}`, {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
